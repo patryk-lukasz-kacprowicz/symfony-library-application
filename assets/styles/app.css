@@ -2,3 +2,23 @@ body {
     background-color: #2C3A47;
     color: #CAD3C8;
 }
+
+pre {
+    color: #d63384;
+}
+
+.ep-element {
+    padding: 5px;
+    border: 1px solid #efefef;
+    border-radius: 5px;
+}
+
+.ep-element .position-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    font-weight: bold;
+    font-size: 32px;
+}
