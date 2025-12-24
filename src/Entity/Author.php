@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
 class Author
@@ -22,6 +24,13 @@ class Author
     #[ORM\Column(length: 255)]
     #[Groups(['book:read'])]
     private ?string $country = null;
+
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'author')]
+    private Collection $books;
+
+    public function __construct() {
+        $this->books = new ArrayCollection();
+    }
 
     public function getId(): ?int {
         return $this->id;
@@ -45,5 +54,9 @@ class Author
         $this->country = $country;
 
         return $this;
+    }
+
+    public function getBooks(): Collection {
+        return $this->books;
     }
 }
