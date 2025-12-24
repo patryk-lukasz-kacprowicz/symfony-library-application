@@ -9,8 +9,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomePageController extends AbstractController {
     #[Route('/', name: 'home-page')]
     public function index(): Response {
-        return $this->render('home-page.html.twig', [
-            'controller_name' => 'HomePageController',
-        ]);
+        return $this->render('swagger/swagger.html.twig');
     }
 }
