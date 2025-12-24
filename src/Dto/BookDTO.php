@@ -7,8 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class BookDTO {
     public function __construct(
         #[Assert\NotBlank]
-        #[Assert\Length(min: 1, max: 255)]
-        public string $author,
+        public int $authorId,
 
         #[Assert\NotBlank]
         #[Assert\Length(min: 1, max: 255)]

@@ -21,10 +21,6 @@ class Book
 
     #[ORM\Column(length: 255)]
     #[Groups(['book:read'])]
-    private ?string $author = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['book:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -39,6 +35,11 @@ class Book
     #[Groups(['book:read'])]
     private ?string $currency = null;
 
+    #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['book:read'])]
+    private ?Author $author = null;
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -49,16 +50,6 @@ class Book
 
     public function setVisible(bool $visible): static {
         $this->visible = $visible;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): static {
-        $this->author = $author;
 
         return $this;
     }
@@ -99,6 +90,16 @@ class Book
 
     public function setCurrency(string $currency): static {
         $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): static {
+        $this->author = $author;
 
         return $this;
     }
