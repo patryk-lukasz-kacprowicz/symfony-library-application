@@ -20,9 +20,10 @@ class AuthorService {
 
     public function store(AuthorDTO $authorDTO): Author | string {
         try {
-            $author = new Author();
-            $author->setName($authorDTO->name);
-            $author->setCountry($authorDTO->country);
+            $author = new Author(
+                name: $authorDTO->name,
+                country: $authorDTO->country
+            );
 
             $this->entityManager->persist($author);
             $this->entityManager->flush();
@@ -41,8 +42,10 @@ class AuthorService {
                 throw new NotFoundHttpException('Author not found');
             }
 
-            $author->setName($authorDTO->name);
-            $author->setCountry($authorDTO->country);
+            $author->update(
+                newName: $authorDTO->name,
+                newCountry: $authorDTO->country
+            );
 
             $this->entityManager->flush();
 
