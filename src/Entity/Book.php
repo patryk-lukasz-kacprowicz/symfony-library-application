@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -12,33 +14,41 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?bool $visible = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?int $amount = null;
 
     #[ORM\Column]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?string $currency = null;
 
     #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'books')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'review:read'])]
     private ?Author $author = null;
+
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
+    #[Groups(['book:read'])]
+    private Collection $reviews;
+
+    public function __construct() {
+        $this->reviews = new ArrayCollection();
+    }
 
     public function getId(): ?int {
         return $this->id;
@@ -102,5 +112,9 @@ class Book
         $this->author = $author;
 
         return $this;
+    }
+
+    public function getReviews(): Collection {
+        return $this->reviews;
     }
 }
