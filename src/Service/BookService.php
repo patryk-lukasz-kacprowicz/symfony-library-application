@@ -49,13 +49,14 @@ class BookService {
     public function update(BookDTO $bookDTO, int $id): Book | string {
         try {
             $book = $this->bookRepository->find($id);
+            $author = $this->authorRepository->find($bookDTO->authorId);
 
-            if (!$book) {
-                throw new NotFoundHttpException("Book not found");
+            if (!$book || !$author) {
+                throw new NotFoundHttpException("Book or Author not found");
             }
 
             $book->setVisible($bookDTO->visible);
-            $book->setAuthor($bookDTO->author);
+            $book->setAuthor($author);
             $book->setName($bookDTO->name);
             $book->setAmount($bookDTO->amount);
             $book->setPrice($bookDTO->price);
