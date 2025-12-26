@@ -8,9 +8,11 @@ use App\Repository\BookRepository;
 use App\Service\BookService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use OpenApi\Attributes as OA;
+use Throwable;
 
 #[OA\Tag(name: "Books")]
 final class BookController extends AbstractController {
@@ -102,9 +104,20 @@ final class BookController extends AbstractController {
         ]
     )]
     public function show(BookRepository $bookRepository, int $id): JsonResponse {
-        $book = $bookRepository->find($id);
+        try {
+            $book = $bookRepository->find($id);
 
-        return $this->json($book, 200, [], ['groups' => ['book:read']]);
+            if (!$book) {
+                throw new NotFoundHttpException('Book not found');
+            }
+
+            return $this->json($book, 200, [], ['groups' => ['book:read']]);
+        } catch (Throwable $exception) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ], 400);
+        }
     }
 
     #[Route('/api/books', name: 'api.books.store', methods: ['POST'])]
