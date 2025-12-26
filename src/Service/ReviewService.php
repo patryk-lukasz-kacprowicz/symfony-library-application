@@ -29,10 +29,11 @@ class ReviewService {
                 throw new NotFoundHttpException('Book not found');
             }
 
-            $review = new Review();
-            $review->setBook($book);
-            $review->setScore($reviewDTO->score);
-            $review->setMessage($reviewDTO->message);
+            $review = new Review(
+                book: $book,
+                score: $reviewDTO->score,
+                message: $reviewDTO->message
+            );
 
             $this->entityManager->persist($review);
             $this->entityManager->flush();
@@ -46,15 +47,15 @@ class ReviewService {
     public function update(ReviewDTO $reviewDTO, int $id): Review | string {
         try {
             $review = $this->reviewRepository->find($id);
-            $book = $this->bookRepository->find($reviewDTO->bookId);
 
-            if (!$review || !$book) {
-                throw new NotFoundHttpException('Review or Book not found');
+            if (!$review) {
+                throw new NotFoundHttpException('Review not found');
             }
 
-            $review->setBook($book);
-            $review->setScore($reviewDTO->score);
-            $review->setMessage($reviewDTO->message);
+            $review->update(
+                newScore: $reviewDTO->score,
+                newMessage: $reviewDTO->message
+            );
 
             $this->entityManager->flush();
 
