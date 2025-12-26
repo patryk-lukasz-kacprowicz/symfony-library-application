@@ -46,11 +46,13 @@ class ReviewService {
     public function update(ReviewDTO $reviewDTO, int $id): Review | string {
         try {
             $review = $this->reviewRepository->find($id);
+            $book = $this->bookRepository->find($reviewDTO->bookId);
 
-            if (!$review) {
-                throw new NotFoundHttpException('Review not found');
+            if (!$review || !$book) {
+                throw new NotFoundHttpException('Review or Book not found');
             }
 
+            $review->setBook($book);
             $review->setScore($reviewDTO->score);
             $review->setMessage($reviewDTO->message);
 
