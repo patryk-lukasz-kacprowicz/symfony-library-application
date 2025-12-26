@@ -19,44 +19,35 @@ class Author
 
     #[ORM\Column(length: 255)]
     #[Groups(['book:read', 'review:read'])]
-    private ?string $name = null;
+    private ?string $name;
 
     #[ORM\Column(length: 255)]
     #[Groups(['book:read', 'review:read'])]
-    private ?string $country = null;
+    private ?string $country;
 
     #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'author')]
     private Collection $books;
 
-    public function __construct() {
+    public function __construct(
+        string $name,
+        string $country
+    ) {
         $this->books = new ArrayCollection();
-    }
 
-    public function getId(): ?int {
-        return $this->id;
-    }
-
-    public function getName(): ?string {
-        return $this->name;
-    }
-
-    public function setName(string $name): static {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): static {
         $this->country = $country;
-
-        return $this;
     }
 
-    public function getBooks(): Collection {
-        return $this->books;
+    public function update(
+        string $newName,
+        string $newCountry,
+    ): void {
+        $this->name = $newName;
+        $this->country = $newCountry;
     }
+
+    public function getId(): ?int { return $this->id; }
+    public function getName(): ?string { return $this->name; }
+    public function getCountry(): ?string { return $this->country; }
+    public function getBooks(): Collection { return $this->books; }
 }
