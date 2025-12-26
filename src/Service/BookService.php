@@ -29,13 +29,14 @@ class BookService {
                 throw new NotFoundHttpException('Author not found');
             }
 
-            $book = new Book();
-            $book->setVisible($bookDTO->visible);
-            $book->setAuthor($author);
-            $book->setName($bookDTO->name);
-            $book->setAmount($bookDTO->amount);
-            $book->setPrice($bookDTO->price);
-            $book->setCurrency($bookDTO->currency);
+            $book = new Book(
+                author: $author,
+                name: $bookDTO->name,
+                amount: $bookDTO->amount,
+                price: $bookDTO->price,
+                currency: $bookDTO->currency,
+                visible: $bookDTO->visible
+            );
 
             $this->entityManager->persist($book);
             $this->entityManager->flush();
@@ -55,12 +56,14 @@ class BookService {
                 throw new NotFoundHttpException("Book or Author not found");
             }
 
-            $book->setVisible($bookDTO->visible);
-            $book->setAuthor($author);
-            $book->setName($bookDTO->name);
-            $book->setAmount($bookDTO->amount);
-            $book->setPrice($bookDTO->price);
-            $book->setCurrency($bookDTO->currency);
+            $book->update(
+                newAuthor: $author,
+                newName: $bookDTO->name,
+                newAmount: $bookDTO->amount,
+                newPrice: $bookDTO->price,
+                newCurrency: $bookDTO->currency,
+                newVisible: $bookDTO->visible
+            );
 
             $this->entityManager->flush();
 
