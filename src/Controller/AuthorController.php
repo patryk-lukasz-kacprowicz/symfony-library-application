@@ -9,8 +9,10 @@ use App\Service\AuthorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use OpenApi\Attributes as OA;
+use Throwable;
 
 #[OA\Tag(name: "Authors")]
 final class AuthorController extends AbstractController {
@@ -80,9 +82,21 @@ final class AuthorController extends AbstractController {
         ]
     )]
     public function show(int $id): JsonResponse {
-        $author = $this->authorRepository->find($id);
+        try {
+            $author = $this->authorRepository->find($id);
 
-        return $this->json($author, 200, [], ['groups' => ['book:read']]);
+            if (!$author) {
+                throw new NotFoundHttpException('Author not found');
+            }
+
+            return $this->json($author, 200, [], ['groups' => ['book:read']]);
+        } catch (Throwable $exception) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ], 400);
+        }
+
     }
 
     #[Route('/api/authors', name: 'api.authors.store', methods: ['POST'])]
